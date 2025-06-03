@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Raquette 3D</title>
+    <style>
+        body { margin: 0; overflow: hidden; }
+        canvas { width: 100%; height: 100vh; }
+    </style>
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script>
+        // Scène, caméra et rendu
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Géométrie de la raquette
+        const handleGeometry = new THREE.CylinderGeometry(0.2, 0.2, 5, 32); // Manche
+        const frameGeometry = new THREE.PlaneGeometry(2, 1.5); // Cadre de la raquette
+
+        // Matériaux avec texture
+        const textureLoader = new THREE.TextureLoader();
+        const texture = textureLoader.load("https://img.freepik.com/psd-gratuit/badminton-racket-icon-vector-design-template_600w_pngtree-a-badminton-racket-symbolizing-sports-and-recreation-png-image_15140439".png'); // Remplace par l'URL de ton image
+        const handleMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 }); // Manche noir
+        const frameMaterial = new THREE.MeshBasicMaterial({ map: texture }); // Texture pour le cadre
+
+        // Création des meshes
+        const handle = new THREE.Mesh(handleGeometry, handleMaterial);
+        const frame = new THREE.Mesh(frameGeometry, frameMaterial);
+
+        // Positionnement
+        handle.position.y = -2.5; // Manche en bas
+        frame.position.y = 0; // Cadre au centre
+        frame.rotation.x = Math.PI / 2; // Rotation pour aligner le plan
+
+        // Ajout à la scène
+        scene.add(handle);
+        scene.add(frame);
+
+        // Position de la caméra
+        camera.position.z = 5;
+
+        // Animation
+        function animate() {
+            requestAnimationFrame(animate);
+            handle.rotation.y += 0.01; // Rotation légère pour l'effet
+            frame.rotation.y += 0.01;
+            renderer.render(scene, camera);
+        }
+        animate();
+    </script>
+</body>
+</html>
